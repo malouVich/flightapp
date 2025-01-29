@@ -32,7 +32,7 @@ public class FlightReader
             System.out.println("runde 2: gennemsnits tid for alle lufthansa fly ; " + averageTime + " minutter");
             List<FlightInfoDTO> flightsBetween = flightsBetweenAirports(flightInfoDTOList, "Fukuoka", "Haneda Airport");
             System.out.println("runde 3: Fly i mellem to lufthavne " + flightsBetween);
-            flightsBetween.forEach(System.out::println);
+            //flightsBetween.forEach(System.out::println);
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -102,14 +102,15 @@ public class FlightReader
 
 //Add a new feature (make a list of flights that are operated between two specific airports. For example, all flights between Fukuoka and Haneda Airport)
 
-    public static List<FlightInfoDTO> flightsBetweenAirports (List<FlightInfoDTO> flightList, String departure, String arrival){
+    public static List<FlightInfoDTO> flightsBetweenAirports (List<FlightInfoDTO> flightList, String origin, String destination){
 
         List<FlightInfoDTO> betweenAirports = flightList.stream()
-
-                .filter(flight -> flight.getDeparture().equals(departure) && flight.getArrival().equals(arrival))
+                .filter(flight -> flight.getOrigin() !=null && flight.getDestination() !=null)
+                .filter(flight -> flight.getOrigin().equals(origin) && flight.getDestination().equals(destination))
                 .collect(Collectors.toList());
 
-
         return betweenAirports;
+
+
     }
 }
