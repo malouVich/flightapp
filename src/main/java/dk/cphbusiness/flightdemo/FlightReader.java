@@ -27,6 +27,8 @@ public class FlightReader
             List<FlightInfoDTO> flightInfoDTOList = getFlightInfoDetails(flightList);
             long minuts = calcTotalFlightTime(flightInfoDTOList, "Lufthansa");
             System.out.println("runde 1: samlet tid for alle lufthansa fly ; " + minuts + " minutter");
+            double averageTime = averageFlightTime(flightInfoDTOList, "Lufthansa");
+            System.out.println("runde 2: gennemsnits tid for alle lufthansa fly ; " + averageTime + " minutter");
            // flightInfoDTOList.forEach(System.out::println);
         } catch (IOException e)
         {
@@ -82,5 +84,16 @@ public class FlightReader
                 .sum();
 
         return result;
+    }
+
+    public static double averageFlightTime(List<FlightInfoDTO> flightList, String airline){
+        double averageResult = flightList.stream()
+                .filter(flight -> flight.getAirline() !=null)
+                .filter(flight -> flight.getAirline().equals(airline))
+                .mapToDouble(flight -> flight.getDuration().toMinutes())
+                .average()
+                .orElse(0.0);
+
+        return averageResult;
     }
 }
