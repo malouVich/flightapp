@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Purpose:
@@ -29,7 +30,9 @@ public class FlightReader
             System.out.println("runde 1: samlet tid for alle lufthansa fly ; " + minuts + " minutter");
             double averageTime = averageFlightTime(flightInfoDTOList, "Lufthansa");
             System.out.println("runde 2: gennemsnits tid for alle lufthansa fly ; " + averageTime + " minutter");
-           // flightInfoDTOList.forEach(System.out::println);
+            List<FlightInfoDTO> flightsBetween = flightsBetweenAirports(flightInfoDTOList, "Fukuoka", "Haneda Airport");
+            System.out.println("runde 3: Fly i mellem to lufthavne " + flightsBetween);
+            flightsBetween.forEach(System.out::println);
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -95,5 +98,18 @@ public class FlightReader
                 .orElse(0.0);
 
         return averageResult;
+    }
+
+//Add a new feature (make a list of flights that are operated between two specific airports. For example, all flights between Fukuoka and Haneda Airport)
+
+    public static List<FlightInfoDTO> flightsBetweenAirports (List<FlightInfoDTO> flightList, String departure, String arrival){
+
+        List<FlightInfoDTO> betweenAirports = flightList.stream()
+
+                .filter(flight -> flight.getDeparture().equals(departure) && flight.getArrival().equals(arrival))
+                .collect(Collectors.toList());
+
+
+        return betweenAirports;
     }
 }
