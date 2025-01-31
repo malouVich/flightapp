@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.chrono.ChronoLocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,6 +35,10 @@ public class FlightReader
             System.out.println("runde 2: gennemsnits tid for alle lufthansa fly ; " + averageTime + " minutter");
             List<FlightInfoDTO> flightsBetween = flightsBetweenAirports(flightInfoDTOList, "Fukuoka", "Haneda Airport");
             System.out.println("runde 3: Fly i mellem to lufthavne " + flightsBetween);
+            LocalTime cutoff = LocalTime.of(1, 0);
+            List<FlightInfoDTO> filteredFlights = FlightReader.flightsBeforeSpecificTime(flightInfoDTOList, cutoff);
+            System.out.println("runde 4: Fly før tid; " + cutoff.format(DateTimeFormatter.ofPattern("hh:mm a")) + ":");
+            filteredFlights.forEach(System.out::println);
             //flightsBetween.forEach(System.out::println);
         } catch (IOException e)
         {
@@ -111,6 +118,18 @@ public class FlightReader
 
         return betweenAirports;
 
+
+    }
+
+    //Add a new feature (make a list of flights that leaves before a specific time in the day/night. For example, all flights that leave before 01:00)
+
+    public static List<FlightInfoDTO> flightsBeforeSpecificTime(List<FlightInfoDTO> flightlist, LocalTime time){
+
+        List<FlightInfoDTO> beforeTime = flightlist.stream()
+                .filter(flights -> flights.getDeparture().toLocalTime().isBefore(time))
+                .collect(Collectors.toList());
+
+        return beforeTime;
 
     }
 }
